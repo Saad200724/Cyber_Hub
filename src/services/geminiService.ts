@@ -1,6 +1,7 @@
 import { GoogleGenAI, Chat } from "@google/genai";
 
-// Fix: The API key must be obtained from process.env.API_KEY as per the guidelines. This also resolves the TypeScript error "Property 'env' does not exist on type 'ImportMeta'".
+// Fix: The API key must be obtained from process.env.API_KEY as per the guidelines.
+// This resolves the TypeScript error "Property 'env' does not exist on type 'ImportMeta'".
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 // For the Idea Generator
