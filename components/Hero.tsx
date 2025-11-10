@@ -19,10 +19,6 @@ const Hero: React.FC = () => {
             </a>
         </div>
       </div>
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-cyan-300 animate-bounce">
-        <span>Scroll Down</span>
-        <ChevronDownIcon className="w-6 h-6" />
-      </div>
     </section>
   );
 };

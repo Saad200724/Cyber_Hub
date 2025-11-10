@@ -1,97 +1,124 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const TERMINAL_LINES = [
-    { text: 'CyberHub [Version 1.0.0]', hasPrompt: false },
-    { text: '(c) 2024 Cyber Hub Corporation. All rights reserved.', hasPrompt: false },
-    { text: '', hasPrompt: false },
-    { text: 'init --club-mission', hasPrompt: true },
-    { text: 'Initializing core protocols...', hasPrompt: false, delay: 200 },
-    { text: 'Mission: To dismantle the present and build a better tomorrow.', hasPrompt: false, delay: 500 },
-    { text: 'Status: Ready.', hasPrompt: false, delay: 100 },
-    { text: '', hasPrompt: true, final: true }
-];
-
 const Terminal: React.FC = () => {
-    const [lines, setLines] = useState<string[]>([]);
-    const ref = useRef<HTMLDivElement>(null);
-    const [isVisible, setIsVisible] = useState(false);
-    
-    useEffect(() => {
-        const observer = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting && !isVisible) {
-                setIsVisible(true);
-                observer.unobserve(entry.target);
-            }
-        }, { threshold: 0.1 });
+    const [input, setInput] = useState('');
+    const [history, setHistory] = useState<string[]>([
+        'CyberHub [Version 1.0.0]',
+        '(c) 2024 Cyber Hub Corporation. All rights reserved.',
+        '',
+        "Type 'help' for a list of available commands.",
+        ''
+    ]);
+    const [commandHistory, setCommandHistory] = useState<string[]>([]);
+    const [commandHistoryIndex, setCommandHistoryIndex] = useState(-1);
 
-        const currentRef = ref.current;
-        if (currentRef) {
-            observer.observe(currentRef);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const terminalEndRef = useRef<HTMLDivElement>(null);
+
+    // Focus the input when the component mounts or the terminal is clicked
+    useEffect(() => {
+        inputRef.current?.focus();
+    }, []);
+
+    // Scroll to the bottom whenever the history changes
+    useEffect(() => {
+        terminalEndRef.current?.scrollIntoView({ behavior: 'auto' });
+    }, [history]);
+
+    const executeCommand = (command: string): string => {
+        const cmd = command.toLowerCase().trim();
+        switch (cmd) {
+            case 'help':
+                return [
+                    'Available commands:',
+                    '- help: Show this help message',
+                    '- dir: List files in current directory',
+                    '- whoami: Display current user',
+                    '- date: Display current date',
+                    '- time: Display current time',
+                    '- ver: Display Windows version',
+                    '- about: About Cyber Hub',
+                    '- cls: Clear the screen'
+                ].join('\n');
+            case 'dir':
+                return [
+                    'Directory of C:\\Users\\CyberHub',
+                    '',
+                    'drwxr-xr-x   .         ',
+                    'drwxr-xr-x   ..        ',
+                    'drwxr-xr-x   projects  ',
+                    '-rw-r--r--   members.txt',
+                    '-rw-r--r--   events.json',
+                    '-rw-r--r--   mission.md ',
+                ].join('\n');
+            case 'whoami':
+                return 'guest';
+            case 'date':
+                return new Date().toLocaleDateString();
+            case 'time':
+                return new Date().toLocaleTimeString();
+            case 'ver':
+                return 'CyberHub [Version 1.0.0]';
+            case 'about':
+                return 'Cyber Hub is not just a club; it\'s a launchpad. We are the architects of the future, the pioneers of the digital frontier.';
+            case '':
+                return '';
+            default:
+                return `'${command}' is not recognized as an internal or external command, operable program or batch file.`;
         }
-
-        return () => {
-            if (currentRef) {
-                observer.unobserve(currentRef);
-            }
-        };
-    }, [isVisible]);
-
-    useEffect(() => {
-        if (!isVisible) return;
-
-        let currentLineIndex = 0;
-        let currentCharIndex = 0;
-        // Fix: Use ReturnType<typeof setTimeout> for browser compatibility instead of NodeJS.Timeout.
-        let currentTimeout: ReturnType<typeof setTimeout>;
-
-        const type = () => {
-            if (currentLineIndex >= TERMINAL_LINES.length) return;
-            
-            const lineConfig = TERMINAL_LINES[currentLineIndex];
-            const fullLine = (lineConfig.hasPrompt ? 'C:\\Users\\CyberHub> ' : '') + lineConfig.text;
-            
-            if (currentCharIndex < fullLine.length) {
-                setLines(prev => {
-                    const newLines = [...prev];
-                    newLines[currentLineIndex] = fullLine.substring(0, currentCharIndex + 1);
-                    return newLines;
-                });
-                currentCharIndex++;
-                currentTimeout = setTimeout(type, 20);
-            } else {
-                currentLineIndex++;
-                currentCharIndex = 0;
-                if (currentLineIndex < TERMINAL_LINES.length) {
-                     setLines(prev => {
-                        const newLines = [...prev];
-                        const nextLineConf = TERMINAL_LINES[currentLineIndex];
-                        newLines[currentLineIndex] = nextLineConf.hasPrompt ? 'C:\\Users\\CyberHub> ' : '';
-                        return newLines;
-                    });
-                    const nextLineDelay = TERMINAL_LINES[currentLineIndex].delay || 100;
-                    currentTimeout = setTimeout(type, nextLineDelay);
-                }
-            }
-        };
-
-        setLines(['']);
-        type();
-
-        return () => clearTimeout(currentTimeout);
-    }, [isVisible]);
-
-    const showCursor = (lineIndex: number) => {
-        if (!lines[lineIndex]) return false;
-        const lineConfig = TERMINAL_LINES[lineIndex];
-        const fullText = (lineConfig.hasPrompt ? 'C:\\Users\\CyberHub> ' : '') + lineConfig.text;
-        return lines[lineIndex].length === fullText.length;
     };
-    
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            const command = input.trim();
+            const promptLine = `C:\\Users\\CyberHub> ${command}`;
+
+            if (command) {
+                setCommandHistory([command, ...commandHistory]);
+            }
+            setCommandHistoryIndex(-1);
+            setInput('');
+
+            if (command.toLowerCase() === 'cls') {
+                setHistory([]);
+                return;
+            }
+
+            const output = executeCommand(command);
+            
+            let newHistory = [...history, promptLine];
+            if (output) {
+                newHistory.push(output);
+            }
+            newHistory.push(''); // Add a blank line for spacing
+            setHistory(newHistory);
+            
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (commandHistory.length > 0) {
+                const newIndex = Math.min(commandHistoryIndex + 1, commandHistory.length - 1);
+                setCommandHistoryIndex(newIndex);
+                setInput(commandHistory[newIndex]);
+            }
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (commandHistoryIndex > -1) {
+                const newIndex = Math.max(commandHistoryIndex - 1, -1);
+                setCommandHistoryIndex(newIndex);
+                setInput(newIndex === -1 ? '' : commandHistory[newIndex]);
+            }
+        }
+    };
+
+    const focusInput = () => {
+        inputRef.current?.focus();
+    };
+
     return (
-        <div 
-            ref={ref} 
-            className={`bg-[#1E1E1E] rounded-lg shadow-2xl overflow-hidden scroll-animate ${isVisible ? 'is-visible' : ''}`}
-            style={{boxShadow: '0 0 25px rgba(0, 255, 255, 0.2), 0 0 50px rgba(255, 0, 255, 0.1)'}}
+        <div
+            className="bg-[#1E1E1E] rounded-lg shadow-2xl overflow-hidden cursor-text"
+            style={{ boxShadow: '0 0 25px rgba(0, 255, 255, 0.2), 0 0 50px rgba(255, 0, 255, 0.1)' }}
+            onClick={focusInput}
         >
             <div className="bg-[#333] px-4 py-2 flex items-center">
                 <div className="flex space-x-2">
@@ -103,13 +130,29 @@ const Terminal: React.FC = () => {
                     CyberHub Terminal
                 </div>
             </div>
-            <div className="p-4 font-mono text-white text-sm whitespace-pre-wrap min-h-[250px]">
-                {lines.map((line, index) => (
-                    <div key={index}>
-                        <span>{line}</span>
-                        {showCursor(index) && TERMINAL_LINES[index].final && <span className="w-2 h-4 bg-white inline-block cursor"></span>}
-                    </div>
+            <div className="p-4 font-mono text-white text-sm whitespace-pre-wrap min-h-[250px] max-h-[400px] overflow-y-auto">
+                {history.map((line, index) => (
+                    <div key={index}>{line}</div>
                 ))}
+                <div className="flex items-center">
+                    <span>C:\Users\CyberHub&gt;&nbsp;</span>
+                    <span className="flex-1">{input}</span>
+                    <span className="w-2 h-4 bg-white inline-block cursor animate-blinking-cursor"></span>
+                </div>
+                 {/* Hidden input to capture keyboard events */}
+                <input
+                    ref={inputRef}
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    className="absolute opacity-0 w-0 h-0 p-0 m-0 border-0"
+                    autoFocus
+                    autoComplete="off"
+                    autoCapitalize="off"
+                    autoCorrect="off"
+                />
+                <div ref={terminalEndRef} />
             </div>
         </div>
     );
