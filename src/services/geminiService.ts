@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Chat } from "@google/genai";
 
 // Fix: The API key must be obtained from process.env.API_KEY as per the guidelines.

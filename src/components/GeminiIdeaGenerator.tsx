@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { generateIdea } from '../services/geminiService';
 import { IDEA_TOPICS } from '../constants';
-import { SparklesIcon } from './Icons';
 
 const GeminiIdeaGenerator: React.FC = () => {
     const [idea, setIdea] = useState<string>('');

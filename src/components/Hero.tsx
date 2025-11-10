@@ -1,6 +1,5 @@
 import React from 'react';
 import ParticleCanvas from './ParticleCanvas';
-import { ChevronDownIcon } from './Icons';
 
 const Hero: React.FC = () => {
   return (
