@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 type IconProps = React.SVGProps<SVGSVGElement>;
@@ -62,4 +61,8 @@ export const ChevronDownIcon: React.FC<IconProps> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
     <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
   </svg>
+);
+
+export const DiscordIcon: React.FC<IconProps> = (props) => (
+    <svg fill="currentColor" viewBox="0 0 24 24" {...props}><path d="M19.54 5.23a12.18 12.18 0 00-3.6-1.42c-.22.35-.42.71-.61 1.09a9.83 9.83 0 00-4.66 0c-.19-.38-.39-.74-.61-1.09a12.2 12.2 0 00-3.6 1.42 11.53 11.53 0 00-2 9.27c.41 1.13 1 2.16 1.76 3.1.53.64 1.13 1.21 1.79 1.72a8.3 8.3 0 005.18 1.87c1.78.06 3.51-.43 5-1.52.89-.66 1.69-1.46 2.38-2.38.64-.82 1.17-1.74 1.6-2.73a11.63 11.63 0 00.12-6.52zM10 15.18c-.83 0-1.5-.7-1.5-1.55s.67-1.55 1.5-1.55c.82 0 1.5.7 1.5 1.55s-.68 1.55-1.5 1.55zm4 0c-.83 0-1.5-.7-1.5-1.55s.67-1.55 1.5-1.55c.82 0 1.5.7 1.5 1.55s-.68 1.55-1.5 1.55z"></path></svg>
 );

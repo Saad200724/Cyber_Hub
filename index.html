@@ -94,6 +94,24 @@
       .cursor {
         animation: blinking-cursor 1s step-end infinite;
       }
+
+      /* Custom Scrollbar */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #333333;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #0f0f19;
+        border-radius: 4px;
+      }
+      /* For Firefox */
+      .custom-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: #0f0f19 #333333;
+      }
     </style>
   <script type="importmap">
 {

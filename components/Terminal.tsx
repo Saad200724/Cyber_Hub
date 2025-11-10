@@ -130,14 +130,14 @@ const Terminal: React.FC = () => {
                     CyberHub Terminal
                 </div>
             </div>
-            <div className="p-4 font-mono text-white text-sm whitespace-pre-wrap min-h-[250px] max-h-[400px] overflow-y-auto">
+            <div className="p-4 font-mono text-white text-sm whitespace-pre-wrap min-h-[250px] max-h-[400px] overflow-y-auto custom-scrollbar">
                 {history.map((line, index) => (
                     <div key={index}>{line}</div>
                 ))}
                 <div className="flex items-center">
                     <span>C:\Users\CyberHub&gt;&nbsp;</span>
-                    <span className="flex-1">{input}</span>
-                    <span className="w-2 h-4 bg-white inline-block cursor animate-blinking-cursor"></span>
+                    <span>{input}</span>
+                    <span className="w-2 h-4 bg-white inline-block cursor"></span>
                 </div>
                  {/* Hidden input to capture keyboard events */}
                 <input

@@ -14,7 +14,7 @@ const Hero: React.FC = () => {
           We are the architects of the future, the pioneers of the digital frontier.
         </p>
         <div className="mt-10">
-            <a href="#join" className="bg-cyan-500 text-white font-bold py-4 px-8 rounded-full hover:bg-cyan-400 transition-all duration-300 shadow-lg text-lg animate-pulse-glow">
+            <a href="#/join" className="bg-cyan-500 text-white font-bold py-4 px-8 rounded-full hover:bg-cyan-400 transition-all duration-300 shadow-lg text-lg animate-pulse-glow">
               Join The Revolution
             </a>
         </div>

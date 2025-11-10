@@ -9,6 +9,7 @@ import EventsPage from './pages/EventsPage';
 import IdeasPage from './pages/IdeasPage';
 import ExecutivePage from './pages/ExecutivePage';
 import ProjectsPage from './pages/ProjectsPage';
+import JoinPage from './pages/JoinPage';
 
 
 const App: React.FC = () => {
@@ -40,6 +41,8 @@ const App: React.FC = () => {
         return <ExecutivePage />;
       case '#/projects':
         return <ProjectsPage />;
+      case '#/join':
+        return <JoinPage />;
       case '#/':
       default:
         return <HomePage />;
